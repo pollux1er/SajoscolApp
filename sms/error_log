@@ -1,0 +1,2 @@
+[13-Jul-2013 14:22:49] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home2/speciav6/public_html/app/utilitaires/verif_install.php on line 59
+[13-Jul-2013 14:22:55] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home2/speciav6/public_html/app/utilitaires/verif_install.php on line 59
