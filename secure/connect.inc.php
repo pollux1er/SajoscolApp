@@ -9,13 +9,13 @@ $multisite = 'n';
 # Si c'est le même que celui qui heberge les scripts, mettre "localhost"
 $dbHost="localhost";
 # ligne suivante : le nom de votre base mysql
-$dbDb="sajoscol_app";
+$dbDb="gepi03";
 # ligne suivante : le nom de l'utilisateur mysql qui a les droits sur la base
 $dbUser="root";
 # ligne suivante : le mot de passe de l'utilisateur mysql ci-dessus
-$dbPass="";
+$dbPass="sasse";
 # Chemin relatif vers GEPI
-$gepiPath="/sajoscol";
+$gepiPath="";
 #
 # Authentification par CAS ?
 # Si vous souhaitez intégrer Gepi dans un environnement SSO avec CAS,
