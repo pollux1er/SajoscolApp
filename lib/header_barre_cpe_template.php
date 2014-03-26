@@ -185,7 +185,7 @@ if ($barre_plugin!="") {
 
 		$menus .= $barre_plugin;
 
-		$tbs_menu_cpe[]=array("li"=> '<li class="li_inline"><a href="'.$gepiPath.'/accueil.php"'.insert_confirm_abandon().'>Accueil</a></li>'."\n");		
+		$tbs_menu_cpe[]=array("li"=> '<li class="li_inline"><a href="'.$gepiPath.'/accueil.php"'.insert_confirm_abandon().'>Home</a></li>'."\n");		
 		$tbs_menu_cpe[]=array("li"=> $menus);
 
 	}
