@@ -2,10 +2,28 @@
 /*
  * $Id$
  */
+ 
+  // $xreq = "SELECT cnd.login, cnd.note, cd.nom_court, cd.note_sur
+ // FROM cn_notes_devoirs AS cnd
+ // LEFT JOIN cn_devoirs AS cd ON cnd.id_devoir = cd.id
+ // LEFT JOIN cn_cahier_notes AS ccn ON cd.id_conteneur = ccn.id_cahier_notes
+ // LEFT JOIN matieres_notes AS mn ON mn.id_groupe = ccn.id_groupe
+ // WHERE cnd.login = 'ADRIANAF'
+ // AND ccn.id_groupe = '202'
+ // AND mn.login = 'ADRIANAF'
+ // ORDER BY cd.id";
+		 // $result = mysql_query($xreq);
+	  
+  // while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+    // var_dump($row['note']);
+  // }
+  
+ // mysql_free_result($result);
 ///// Ajoute pour le 3eme trimestre par patient
 $xloginx = $_POST['tab_selection_ele_0_0'][0];
 $xperiodex = $_POST['tab_periode_num'][0];
 $xclassex = $_POST['tab_id_classe'][0];
+//var_dump($xclassex); 
 $MoY  = 0; // Moyenne generale de leleve pour le trimestre
 $fgd = 0;
 $min_max_moyclas=1;
@@ -14,7 +32,7 @@ $passed = 0;
 echo "<br />";
 echo "<br />";
 echo "<br />";
-//var_dump($tab_bull['groupe'][$i]["classlist_string"]);
+//var_dump($tab_bull['groupe'][$i]);
 //echo "</pre>";
 // On initialise le tableau des notes et appréciations :
 echo "<table $class_bordure width='$largeurtableau' border='1' cellspacing='".$cellspacing."' cellpadding='".$cellpadding."' summary='Table of the notes and appreciations'>\n";
@@ -39,6 +57,19 @@ echo "</font></span></td>\n";
 if(isset($tab_bull['affiche_coef'])) {
 	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"> <span class='bulletin' style='font-weight:bold'>Coef.</span></td>\n";
 }
+
+// Prepare space for CC 
+if($xperiodex == 1) {
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Seq 1</span></td>\n";
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Seq 2</span></td>\n";
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Exam</span></td>\n";
+} elseif($xperiodex == 2) {
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Test</span></td>\n";
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Exam</span></td>\n";
+} elseif($xperiodex == 3) {
+	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Exam</span></td>\n";
+}
+
 
 if($tab_bull['affiche_nbdev']=="y"){
 	echo "<td style=\"width: ".$col_note_largeur."px; text-align: center;\"><span class='bulletin'>Nb.dev</span></td>\n";
@@ -224,6 +255,11 @@ if ($bull_affiche_aid == 'y') {
 //===============================================================================
 // Partie matières/groupes
 $categorie_precedente="";
+
+//for($j=0;$j<count($tab_bull['groupe'][$j]);$j++) {
+	//var_dump($tab_bull['groupe'][$j]['id']);// id_groupe
+	//var_dump($tab_bull['eleve'][$i]['login']);// login
+//}
 for($j=0;$j<count($tab_bull['groupe']);$j++) {
 	// Si l'élève suit l'option, sa note est affectée (éventuellement vide)
 	if(isset($tab_bull['note'][$j][$i])) {
@@ -290,6 +326,7 @@ for($j=0;$j<count($tab_bull['groupe']);$j++) {
 		}
 
 		if(isset($tab_bull['groupe'][$j][$i]['cn_note'])) {
+		die;
 			//$rowspan=count($tab_bull['groupe'][$j][$i]['cn_note']);
 			$chaine_rowspan=" rowspan='".count($tab_bull['groupe'][$j][$i]['cn_note'])."'";
 		}
@@ -335,6 +372,60 @@ for($j=0;$j<count($tab_bull['groupe']);$j++) {
 		if($tab_bull['affiche_nbdev']=="y"){
 			echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".$tab_bull['nbct'][$j][$i]."/".$tab_bull['groupe'][$j]['nbct']."</span></td>\n";
 		}
+		////////////// Notes de CC et Exams ///////////////////////////
+		$xreq = "SELECT cnd.login, cnd.note, cd.nom_court, cd.note_sur
+			 FROM cn_notes_devoirs AS cnd
+			 LEFT JOIN cn_devoirs AS cd ON cnd.id_devoir = cd.id
+			 LEFT JOIN cn_cahier_notes AS ccn ON cd.id_conteneur = ccn.id_cahier_notes
+			 LEFT JOIN matieres_notes AS mn ON mn.id_groupe = ccn.id_groupe
+			WHERE cnd.login = '".$tab_bull['eleve'][$i]['login']."'
+			AND ccn.id_groupe = '".$tab_bull['groupe'][$j]['id']."'
+			 AND mn.login = '".$tab_bull['eleve'][$i]['login']."'
+			 ORDER BY cd.id";
+		$result = mysql_query($xreq);
+		$numCC = mysql_num_rows($result);
+		$if = 0;
+		if($numCC == 3) {
+			while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+				echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+			}
+		} else if($numCC == 2) {
+			if($xperiodex == 1) { // Si on est au 1er trimestre
+				$if = 1;
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					if($if == 1)
+						echo "<td$chaine_rowspan colspan=\"2\" style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+					else
+						echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+					$if++;
+				}
+			} else if($xperiodex == 2) { // Si on est au 2eme trimestre
+				
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+				}
+			}
+			
+		} else if($numCC == 1) {
+			if($xperiodex == 1) { // Si on est au 1er trimestre
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					echo "<td$chaine_rowspan colspan=\"3\" style='text-align: center;'><span class='bulletin'>2/".$row['note_sur']."</span></td>\n";
+				}
+			} else if($xperiodex == 2) { // Si on est au 2eme trimestre
+				
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					echo "<td$chaine_rowspan colspan=\"2\" style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+				}
+			} else if($xperiodex == 3) { // Si on est au 3eme trimestre
+				
+				while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+					echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".$row['note']."/".$row['note_sur']."</span></td>\n";
+				}
+			}			
+		}
+		mysql_free_result($result);
+		
+		///////////////////////////////////////////////////////////////
 
 		/* if($min_max_moyclas!=1) {
 			echo "<td$chaine_rowspan style='text-align: center;'><span class='bulletin'>".nf($tab_bull['moy_min_classe_grp'][$j])."</span></td>\n";
@@ -601,7 +692,12 @@ if(isset($tab_bull['display_moy_gen'])) {
 			if($tab_bull['affiche_nbdev']=='y') {
 				echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
 			}
-
+			/////////////////// CC et Exam espace row
+			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+			
+			//////////
 			/* if($min_max_moyclas!=1) {
 				echo "<td style='text-align: center;'><span class='bulletin'>".nf($tab_bull['moy_min_classe'])."</span></td>\n";
 				//$tab_bull['moy_gen_classe'][$i]
