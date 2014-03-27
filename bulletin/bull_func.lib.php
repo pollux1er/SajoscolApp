@@ -1145,7 +1145,7 @@ width:".$largeur1."%;\n";
 
 		echo "<table width='$largeurtableau' style='margin-left:5px; margin-right:5px;' border='0' cellspacing='".$cellspacing."' cellpadding='".$cellpadding."' summary='Formulate of bottom of page'>\n";
 		echo "<tr>";
-		echo "<td><p align='center' class='bulletin' style='margin:0'>Next term re-opens on 5<sup>th</sup> January 2014</p></td>\n";
+		echo "<td><p align='center' class='bulletin' style='margin:0'>Next term re-opens on 21<sup>st</sup> April 2014</p></td>\n";
 		echo "</tr></table>";
 		echo "\n<!-- End of the bulletin n°$bulletin for ".$tab_bull['eleve'][$i]['nom']." ".$tab_bull['eleve'][$i]['prenom'].", ".$tab_bull['eleve'][$i]['classe']." -->\n\n";
 
