@@ -152,7 +152,6 @@ if ($id_devoir)  {
 		die();
 	}
 }
-var_dump($id_racine);
 
 //Initialisation pour le pdf
 $w_pdf=array();
