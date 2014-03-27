@@ -99,7 +99,7 @@ if(is_null($cls)) {
 }
 //if($i == 2)
 	$i = $k - 1;
-// var_dump($_POST);
+//var_dump($_POST);
 //var_dump($eleve);
 // var_dump($i);
 // var_dump($k);
@@ -380,8 +380,9 @@ for($j=0;$j<count($tab_bull['groupe']);$j++) {
 			 LEFT JOIN matieres_notes AS mn ON mn.id_groupe = ccn.id_groupe
 			WHERE cnd.login = '".$tab_bull['eleve'][$i]['login']."'
 			AND ccn.id_groupe = '".$tab_bull['groupe'][$j]['id']."'
-			 AND mn.login = '".$tab_bull['eleve'][$i]['login']."'
+			 AND mn.login = '".$tab_bull['eleve'][$i]['login']."' AND ccn.periode = '".$xperiodex."' AND mn.periode = '".$xperiodex."' 
 			 ORDER BY cd.id";
+//var_dump($xreq); die;
 		$result = mysql_query($xreq);
 		$numCC = mysql_num_rows($result);
 		$if = 0;
@@ -693,9 +694,17 @@ if(isset($tab_bull['display_moy_gen'])) {
 				echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
 			}
 			/////////////////// CC et Exam espace row
-			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
-			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
-			echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+			
+			if($xperiodex == 1) {
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+} elseif($xperiodex == 2) {
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+} elseif($xperiodex == 3) {
+	echo "<td style='text-align: center;'><span class='bulletin'>-</span></td>\n";
+}
 			
 			//////////
 			/* if($min_max_moyclas!=1) {
